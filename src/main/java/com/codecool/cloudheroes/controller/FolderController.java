@@ -55,8 +55,16 @@ public class FolderController {
     }
 
     @DeleteMapping()
-    public String deleteFolder() {
-        return "";
+    public String deleteFolder(@RequestParam String folderName, @RequestParam String path) {
+        Map<String, String> response = new HashMap<>();
+        boolean delete = new File(USER_DIRECTORY + path + folderName).delete();
+        File[] files = new File(USER_DIRECTORY + path).listFiles();
+        List<FileModel> fileModels = createFileModels(files);
+        Gson gson = new Gson();
+        response.put("content", gson.toJson(fileModels));
+        response.put("parentDirectory", path);
+        response.put("isDeleted", String.valueOf(delete));
+        return gson.toJson(response);
     }
 
     private List<FileModel> createFileModels(File[] files) {
