@@ -1,10 +1,16 @@
 package com.codecool.cloudheroes.controller;
 
+import com.codecool.cloudheroes.message.ResponseMessage;
 import com.codecool.cloudheroes.model.FileModel;
+import com.codecool.cloudheroes.service.FilesStorageService;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,15 +22,22 @@ public class FileController {
 
     private static final Path USER_DIRECTORY = Path.of(System.getProperty("user.dir") + "/doc-uploads");
 
+    FilesStorageService storageService;
+
+    @Autowired
+    public FileController(FilesStorageService storageService) {
+        this.storageService = storageService;
+    }
+
     @GetMapping
-    public String getFolderContent(@RequestParam String path) {
-        Map<String, String> response = new HashMap<>();
-        File[] files = new File(USER_DIRECTORY + path).listFiles();
-        List<FileModel> fileModels = createFileModels(files);
-        Gson gson = new Gson();
-        response.put("content", gson.toJson(fileModels));
-        response.put("parentDirectory", path);
-        return gson.toJson(response);
+    public ResponseEntity<ResponseMessage> getFolderContent(@RequestParam String path) {
+        try {
+            List<FileModel> fileModels = storageService.getFolderContent(path);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("OK", fileModels));
+        } catch(FileNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(
+                    "Path Doesn't exist", null));
+        }
     }
 
     @PostMapping("/create")
