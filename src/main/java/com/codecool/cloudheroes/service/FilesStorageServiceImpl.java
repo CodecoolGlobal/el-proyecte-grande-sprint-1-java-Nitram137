@@ -1,7 +1,6 @@
 package com.codecool.cloudheroes.service;
 
 import com.codecool.cloudheroes.model.FileModel;
-import com.google.gson.Gson;
 import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -74,6 +73,14 @@ public class FilesStorageServiceImpl implements FilesStorageService{
         boolean moved = file.renameTo(new File(USER_DIRECTORY + newPath + name));
         if (!moved) {
             throw new FileAlreadyExistsException("Folder is already exists!");
+        }
+    }
+
+    @Override
+    public void deleteFile(String name, String path) throws FileNotFoundException {
+        File file = new File(USER_DIRECTORY + path + name);
+        if (!file.delete()) {
+            throw new FileNotFoundException("File not found");
         }
     }
 
