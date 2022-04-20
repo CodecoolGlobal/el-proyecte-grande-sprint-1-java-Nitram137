@@ -35,7 +35,6 @@ function create ()
 
     player = this.physics.add.sprite(700, 350, 'stickman').setScale(2/3);
 
-    player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
     this.anims.create({
@@ -48,6 +47,12 @@ function create ()
     this.anims.create({
         key: 'turn',
         frames: [ { key: 'stickman', frame: 7 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'jump',
+        frames: [ { key: 'stickman', frame: 15 } ],
         frameRate: 20
     });
 
@@ -82,8 +87,7 @@ function update ()
         player.anims.play('turn');
     }
 
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-450);
-    }
+    if (cursors.up.isDown && player.body.touching.down) player.setVelocityY(-450);
+
+    if (!player.body.touching.down) player.anims.play('jump');
 }
