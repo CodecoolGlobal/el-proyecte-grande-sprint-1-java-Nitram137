@@ -5,6 +5,8 @@ import com.codecool.cloudheroes.model.FileModel;
 import com.codecool.cloudheroes.service.FilesStorageService;
 import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,5 +100,13 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
                     new ResponseMessage(e.getMessage(), null));
         }
+    }
+
+    @GetMapping("/download")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile(@RequestParam String fileName, @RequestParam String path) {
+        Resource file = storageService.load(fileName, path);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 }
