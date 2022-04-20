@@ -55,7 +55,8 @@ public class FileController {
     }
 
     @PutMapping("/rename")
-    public ResponseEntity<ResponseMessage> renameFolder(@RequestParam String newName, @RequestParam String oldName, @RequestParam String path) {
+    public ResponseEntity<ResponseMessage> renameFolder(@RequestParam String newName,
+                                                        @RequestParam String oldName, @RequestParam String path) {
         try {
             storageService.renameFolder(newName, oldName, path);
             List<FileModel> fileModels = storageService.getFolderContent(path);
@@ -67,17 +68,16 @@ public class FileController {
     }
 
     @PutMapping("/move")
-    public String moveFolder(@RequestParam String folderName, @RequestParam String originalPath, @RequestParam String newPath) {
-        Map<String, String> response = new HashMap<>();
-        File folder = new File(USER_DIRECTORY + originalPath + folderName);
-        boolean moved = folder.renameTo(new File(USER_DIRECTORY + newPath + folderName));
-        File[] files = new File(USER_DIRECTORY + newPath).listFiles();
-        List<FileModel> fileModels = createFileModels(files);
-        Gson gson = new Gson();
-        response.put("content", gson.toJson(fileModels));
-        response.put("parentDirectory", newPath);
-        response.put("isMoved", String.valueOf((moved)));
-        return gson.toJson(response);
+    public ResponseEntity<ResponseMessage> moveFile(@RequestParam String name,
+                                                      @RequestParam String originalPath, @RequestParam String newPath) {
+        try {
+            storageService.moveFile(name, originalPath, newPath);
+            List<FileModel> fileModels = storageService.getFolderContent(newPath);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("OK", fileModels));
+        } catch (FileNotFoundException | FileAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseMessage(e.getMessage(), null));
+        }
     }
 
     @DeleteMapping()
