@@ -49,6 +49,22 @@ public class FilesStorageServiceImpl implements FilesStorageService{
         }
     }
 
+    @Override
+    public void renameFolder(String newName, String oldName, String path) throws FileNotFoundException, FileAlreadyExistsException {
+        File folder = new File(USER_DIRECTORY + path);
+        if (!folder.exists()) {
+            throw new FileNotFoundException("Path doesn't exists");
+        }
+        if (newName.contains(".")) {
+            throw new InvalidFileNameException(newName, "FolderName is invalid!");
+        }
+        boolean rename = new File(USER_DIRECTORY + path + oldName)
+                .renameTo(new File(USER_DIRECTORY + path + newName));
+        if (!rename) {
+            throw new FileAlreadyExistsException("Folder is already exists!");
+        }
+    }
+
 
     @Override
     public void save(MultipartFile file) {

@@ -12,6 +12,7 @@ public interface FilesStorageService {
 
     public List<FileModel> getFolderContent(String path) throws FileNotFoundException;
     public void createNewFolder(String folderName, String path) throws FileNotFoundException, FileAlreadyExistsException;
+    void renameFolder(String newName, String oldName, String path) throws FileNotFoundException, FileAlreadyExistsException;
     public void save(MultipartFile file);
     public Resource load(String filename);
 }
