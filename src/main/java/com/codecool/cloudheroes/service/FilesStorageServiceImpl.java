@@ -3,11 +3,13 @@ package com.codecool.cloudheroes.service;
 import com.codecool.cloudheroes.model.FileModel;
 import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -96,8 +98,19 @@ public class FilesStorageServiceImpl implements FilesStorageService{
     }
 
     @Override
-    public Resource load(String filename) {
-        return null;
+    public Resource load(String filename, String path) {
+        try {
+            Path file = Path.of(USER_DIRECTORY + path + filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Could not read the file!");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
     }
+
 
 }

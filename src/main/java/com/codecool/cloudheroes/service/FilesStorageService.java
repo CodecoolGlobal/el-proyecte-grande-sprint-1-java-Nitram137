@@ -16,5 +16,5 @@ public interface FilesStorageService {
     void moveFile(String name, String originalPath, String newPath) throws FileNotFoundException, FileAlreadyExistsException;
     void deleteFile(String name, String path) throws FileNotFoundException;
     public void save(MultipartFile file, String path);
-    public Resource load(String filename);
+    public Resource load(String filename, String path);
 }
