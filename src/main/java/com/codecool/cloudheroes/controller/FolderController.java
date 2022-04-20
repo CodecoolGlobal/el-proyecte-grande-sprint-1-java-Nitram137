@@ -41,8 +41,17 @@ public class FolderController {
     }
 
     @PutMapping()
-    public String renameFolder() {
-        return "";
+    public String renameFolder(@RequestParam String newName, @RequestParam String oldName, @RequestParam String path) {
+        Map<String, String> response = new HashMap<>();
+        boolean file = new File(USER_DIRECTORY + path + oldName)
+                .renameTo(new File(USER_DIRECTORY + path + newName));
+        File[] files = new File(USER_DIRECTORY + path).listFiles();
+        List<FileModel> fileModels = createFileModels(files);
+        Gson gson = new Gson();
+        response.put("content", gson.toJson(fileModels));
+        response.put("parentDirectory", path);
+        response.put("isRenamed", String.valueOf(file));
+        return gson.toJson(response);
     }
 
     @DeleteMapping()
