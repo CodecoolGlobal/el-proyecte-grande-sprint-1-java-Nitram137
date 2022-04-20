@@ -55,8 +55,14 @@ function create ()
     });
 
     this.anims.create({
-        key: 'jump',
+        key: 'jump_right',
         frames: [ { key: 'stickman', frame: 15 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'jump_left',
+        frames: [ { key: 'stickman', frame: 16 } ],
         frameRate: 20
     });
 
@@ -77,13 +83,14 @@ function update ()
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
-
-        player.anims.play('left', true);
+        if (!player.body.touching.down) player.anims.play('jump_left');
+        else player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(160);
-        player.anims.play('right', true);
+        if (!player.body.touching.down) player.anims.play('jump_right');
+        else player.anims.play('right', true);
     }
     else
     {
@@ -92,6 +99,4 @@ function update ()
     }
 
     if (cursors.up.isDown && player.body.touching.down) player.setVelocityY(-560);
-
-    if (!player.body.touching.down) player.anims.play('jump');
 }
