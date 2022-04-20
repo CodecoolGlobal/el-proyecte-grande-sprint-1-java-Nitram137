@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -86,8 +87,12 @@ public class FilesStorageServiceImpl implements FilesStorageService{
 
 
     @Override
-    public void save(MultipartFile file) {
-
+    public void save(MultipartFile file, String path) {
+        try {
+            Files.copy(file.getInputStream(), Path.of(USER_DIRECTORY + path + file.getOriginalFilename()));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+        }
     }
 
     @Override

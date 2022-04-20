@@ -15,6 +15,6 @@ public interface FilesStorageService {
     void renameFolder(String newName, String oldName, String path) throws FileNotFoundException, FileAlreadyExistsException;
     void moveFile(String name, String originalPath, String newPath) throws FileNotFoundException, FileAlreadyExistsException;
     void deleteFile(String name, String path) throws FileNotFoundException;
-    public void save(MultipartFile file);
+    public void save(MultipartFile file, String path);
     public Resource load(String filename);
 }
