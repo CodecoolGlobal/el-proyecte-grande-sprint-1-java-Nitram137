@@ -51,14 +51,14 @@ public class FilesStorageServiceImpl implements FilesStorageService{
 
     @Override
     public void renameFolder(String newName, String oldName, String path) throws FileNotFoundException, FileAlreadyExistsException {
-        File folder = new File(USER_DIRECTORY + path);
+        File folder = new File(USER_DIRECTORY + path + oldName);
         if (!folder.exists()) {
             throw new FileNotFoundException("Path doesn't exists");
         }
         if (newName.contains(".")) {
             throw new InvalidFileNameException(newName, "FolderName is invalid!");
         }
-        boolean rename = new File(USER_DIRECTORY + path + oldName)
+        boolean rename = folder
                 .renameTo(new File(USER_DIRECTORY + path + newName));
         if (!rename) {
             throw new FileAlreadyExistsException("Folder is already exists!");
