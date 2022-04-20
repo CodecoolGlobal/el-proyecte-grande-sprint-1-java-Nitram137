@@ -1,6 +1,8 @@
 
 export let dataHandler = {
-
+    getFolderContent: async function(path) {
+        return await apiGet(`/api/file?path=${path}`);
+    }
 }
 
 async function apiGet(url) {
