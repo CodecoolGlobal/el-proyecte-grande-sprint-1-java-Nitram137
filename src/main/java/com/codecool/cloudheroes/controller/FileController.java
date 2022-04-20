@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/api/folder")
-public class FolderController {
+@RequestMapping("/api/file")
+public class FileController {
 
     private static final Path USER_DIRECTORY = Path.of(System.getProperty("user.dir") + "/doc-uploads");
 
@@ -40,7 +40,7 @@ public class FolderController {
         return gson.toJson(response);
     }
 
-    @PutMapping()
+    @PutMapping("/rename")
     public String renameFolder(@RequestParam String newName, @RequestParam String oldName, @RequestParam String path) {
         Map<String, String> response = new HashMap<>();
         boolean file = new File(USER_DIRECTORY + path + oldName)
@@ -51,6 +51,20 @@ public class FolderController {
         response.put("content", gson.toJson(fileModels));
         response.put("parentDirectory", path);
         response.put("isRenamed", String.valueOf(file));
+        return gson.toJson(response);
+    }
+
+    @PutMapping("/move")
+    public String moveFolder(@RequestParam String folderName, @RequestParam String originalPath, @RequestParam String newPath) {
+        Map<String, String> response = new HashMap<>();
+        File folder = new File(USER_DIRECTORY + originalPath + folderName);
+        boolean moved = folder.renameTo(new File(USER_DIRECTORY + newPath + folderName));
+        File[] files = new File(USER_DIRECTORY + newPath).listFiles();
+        List<FileModel> fileModels = createFileModels(files);
+        Gson gson = new Gson();
+        response.put("content", gson.toJson(fileModels));
+        response.put("parentDirectory", newPath);
+        response.put("isMoved", String.valueOf((moved)));
         return gson.toJson(response);
     }
 
