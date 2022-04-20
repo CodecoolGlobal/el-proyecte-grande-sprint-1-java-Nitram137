@@ -25,3 +25,16 @@ async function apiPost(url, payload) {
     }
     return response.json();
 }
+
+async function apiPut(url, payload) {
+    let response = await fetch(url, {
+        method: "PUT",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(payload)
+
+    });
+    if (!response.ok) {
+        throw Error(`${response.status} ${response.statusText}`);
+    }
+    return response.json();
+    }
