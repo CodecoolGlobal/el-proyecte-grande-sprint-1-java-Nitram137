@@ -28,8 +28,16 @@ public class FolderController {
     }
 
     @PostMapping("/create")
-    public String createNewFolder(@RequestParam String newFolderName, @RequestParam String route) {
-        return "";
+    public String createNewFolder(@RequestParam String newFolderName, @RequestParam String path) {
+        Map<String, String> response = new HashMap<>();
+        boolean newDirectory = new File(USER_DIRECTORY + path + newFolderName).mkdir();
+        File[] files = new File(USER_DIRECTORY + path).listFiles();
+        List<FileModel> fileModels = createFileModels(files);
+        Gson gson = new Gson();
+        response.put("content", gson.toJson(fileModels));
+        response.put("parentDirectory", path);
+        response.put("isCreated", String.valueOf(newDirectory));
+        return gson.toJson(response);
     }
 
     @PutMapping()
