@@ -1,4 +1,4 @@
-package com.codecool.cloudheroes;
+package com.codecool.cloudheroes.controller;
 
 
 import org.springframework.stereotype.Controller;
