@@ -38,3 +38,13 @@ async function apiPut(url, payload) {
     }
     return response.json();
     }
+
+async function apiDelete(url) {
+    let response = await fetch(url, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw Error(`${response.status} ${response.statusText}`);
+    }
+    return response.json();
+}
