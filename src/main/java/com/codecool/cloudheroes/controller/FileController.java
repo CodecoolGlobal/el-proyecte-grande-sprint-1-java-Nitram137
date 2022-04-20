@@ -55,17 +55,15 @@ public class FileController {
     }
 
     @PutMapping("/rename")
-    public String renameFolder(@RequestParam String newName, @RequestParam String oldName, @RequestParam String path) {
-        Map<String, String> response = new HashMap<>();
-        boolean file = new File(USER_DIRECTORY + path + oldName)
-                .renameTo(new File(USER_DIRECTORY + path + newName));
-        File[] files = new File(USER_DIRECTORY + path).listFiles();
-        List<FileModel> fileModels = createFileModels(files);
-        Gson gson = new Gson();
-        response.put("content", gson.toJson(fileModels));
-        response.put("parentDirectory", path);
-        response.put("isRenamed", String.valueOf(file));
-        return gson.toJson(response);
+    public ResponseEntity<ResponseMessage> renameFolder(@RequestParam String newName, @RequestParam String oldName, @RequestParam String path) {
+        try {
+            storageService.renameFolder(newName, oldName, path);
+            List<FileModel> fileModels = storageService.getFolderContent(path);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("OK", fileModels));
+        } catch (FileNotFoundException | FileAlreadyExistsException | InvalidFileNameException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResponseMessage(e.getMessage(), null));
+        }
     }
 
     @PutMapping("/move")
