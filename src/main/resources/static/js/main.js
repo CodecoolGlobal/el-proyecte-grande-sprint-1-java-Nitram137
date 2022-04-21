@@ -37,6 +37,7 @@ function create ()
     for(let i=0;i<3;i++) {
         let tilt = 800 + i * 250;
         platforms.create(tilt, 800, 'folder').setScale(1.5).refreshBody();
+        this.add.text(tilt-50, 800, 'Hello World', { font: '"Press Start 2P"' });
     }
     platforms.create(840, 925, 'invisible-floor').refreshBody();
 
