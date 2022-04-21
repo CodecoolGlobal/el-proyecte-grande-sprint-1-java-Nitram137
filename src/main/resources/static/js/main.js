@@ -28,22 +28,23 @@ function preload ()
 
 function create ()
 {
+    // Background
     this.add.image(0, 0, 'background').setOrigin(0,0).setScale(7/8);
 
+    // Platforms
     platforms = this.physics.add.staticGroup();
 
-    for(let i=0;i<6;i++) {
-        let tilt = 200 + i * 250;
-        platforms.create(tilt, 600, 'folder').setScale(1.5).refreshBody();
-        if(i>1 && i<4) platforms.create(tilt, 450, 'folder').setScale(1.5).refreshBody();
+    for(let i=0;i<3;i++) {
+        let tilt = 800 + i * 250;
+        platforms.create(tilt, 800, 'folder').setScale(1.5).refreshBody();
     }
-
     platforms.create(840, 925, 'invisible-floor').refreshBody();
 
-    player = this.physics.add.sprite(500, 350, 'stickman').setScale(2/3);
-
+    //Player
+    player = this.physics.add.sprite(200, 250, 'stickman').setScale(2/3);
     player.setCollideWorldBounds(true);
 
+    // Animations
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('stickman', { start: 0, end: 6 }),
@@ -82,8 +83,10 @@ function create ()
         frameRate: 20
     });
 
+    // Controls
     cursors = this.input.keyboard.createCursorKeys();
 
+    // Collisions
     this.physics.add.collider(player, platforms);
 }
 
@@ -91,13 +94,13 @@ function update ()
 {
     if (cursors.left.isDown)
     {
-        player.setVelocityX(-160);
+        player.setVelocityX(-200);
         if (!player.body.touching.down) player.anims.play('jump_left');
         else player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
-        player.setVelocityX(160);
+        player.setVelocityX(200);
         if (!player.body.touching.down) player.anims.play('jump_right');
         else player.anims.play('right', true);
     }
@@ -107,6 +110,6 @@ function update ()
         player.anims.play('turn');
     }
 
-    if (cursors.up.isDown && player.body.touching.down) player.setVelocityY(-560);
+    if (cursors.up.isDown && player.body.touching.down) player.setVelocityY(-540);
     if (!player.body.touching.down && !cursors.right.isDown && !cursors.left.isDown) player.anims.play('jump');
 }
