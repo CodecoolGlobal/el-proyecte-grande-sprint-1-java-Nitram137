@@ -6,28 +6,35 @@ export let fileController = {
         fileController.currentRoute = "/";
     },
     getFolderContent: function (folderName) {
-        dataHandler.getFolderContent(fileController.currentRoute + folderName).then((response) => {
+        dataHandler.getFolderContent(fileController.currentRoute + folderName + "/").then((response) => {
             console.log(response);
         }).catch((error) => {
             alert(error);
         });
     },
-    createFolder: function (folderName, path) {
-        dataHandler.createFolder(folderName, fileController.currentRoute + path).then((response) => {
+    createFolder: function (folderName) {
+        dataHandler.createFolder(folderName, fileController.currentRoute).then((response) => {
             console.log(response);
         }).catch((error) => {
             alert(error);
         });
     },
-    renameFolder: function (newName, oldName, path) {
-        dataHandler.renameFolder(newName, oldName, fileController.currentRoute + path).then((response) => {
+    renameFolder: function (newName, oldName) {
+        dataHandler.renameFolder(newName, oldName, fileController.currentRoute).then((response) => {
             console.log(response);
         }).catch((error) => {
             alert(error);
         });
     },
-    uploadFile: function (file, path) {
-        dataHandler.uploadFile(file, fileController.currentRoute + path).then((response) => {
+    moveFile: function (fileName, originalPath, newPath) {
+        dataHandler.moveFile(fileName, originalPath, newPath).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            alert(error);
+        })
+    },
+    uploadFile: function (file) {
+        dataHandler.uploadFile(file, fileController.currentRoute).then((response) => {
             console.log(response);
         }).catch((error) => {
             alert(error);
