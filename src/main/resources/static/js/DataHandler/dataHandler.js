@@ -2,6 +2,12 @@
 export let dataHandler = {
     getFolderContent: async function(path) {
         return await apiGet(`/api/file?path=${path}`);
+    },
+    createFolder: async function(folderName, path) {
+        const payload = new FormData();
+        payload.append('folderName', folderName);
+        payload.append('path', path);
+        return await apiPost('/api/file/create', payload);
     }
 }
 
@@ -18,9 +24,7 @@ async function apiGet(url) {
 async function apiPost(url, payload) {
     let response = await fetch(url, {
         method: "POST",
-        headers: {"content-type":"application/json"},
-        body:JSON.stringify(payload)
-
+        body:payload
     });
     if(!response.ok) {
         throw Error(`${response.status} ${response.statusText}`);
