@@ -9,6 +9,12 @@ export let dataHandler = {
         payload.append('path', path);
         return await apiPost('/api/file/create', payload);
     },
+    renameFolder: async function (newName,oldName, path) {
+        const payload = new FormData();
+        payload.append('newName', newName);
+        payload.append('oldName', oldName);
+        payload.append('path', path);
+    },
     uploadFile: async function(file, path) {
         const payload = new FormData();
         payload.append('file', file);
