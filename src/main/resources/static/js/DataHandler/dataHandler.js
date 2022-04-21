@@ -8,6 +8,12 @@ export let dataHandler = {
         payload.append('folderName', folderName);
         payload.append('path', path);
         return await apiPost('/api/file/create', payload);
+    },
+    uploadFile: async function(file, path) {
+        const payload = new FormData();
+        payload.append('file', file);
+        payload.append('path', path);
+        return await apiPost("/api/file/upload", payload);
     }
 }
 
