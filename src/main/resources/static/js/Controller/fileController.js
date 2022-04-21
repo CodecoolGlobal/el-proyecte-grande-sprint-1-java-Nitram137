@@ -11,5 +11,12 @@ export let fileController = {
         }).catch((error) => {
             alert(error);
         });
+    },
+    createFolder: function (folderName, path) {
+        dataHandler.createFolder(folderName, path).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            alert(error);
+        })
     }
 }
