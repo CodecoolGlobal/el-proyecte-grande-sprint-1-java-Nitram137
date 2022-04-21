@@ -14,6 +14,14 @@ export let dataHandler = {
         payload.append('newName', newName);
         payload.append('oldName', oldName);
         payload.append('path', path);
+        return await apiPut('/api/file/rename', payload);
+    },
+    moveFile: async function(fileName, originalPath, newPath) {
+        const payload = new FormData();
+        payload.append('name', fileName);
+        payload.append('originalPath', originalPath);
+        payload.append('path', newPath);
+        return await apiPut('/api/file/move', payload);
     },
     uploadFile: async function(file, path) {
         const payload = new FormData();
@@ -47,8 +55,7 @@ async function apiPost(url, payload) {
 async function apiPut(url, payload) {
     let response = await fetch(url, {
         method: "PUT",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify(payload)
+        body: payload
 
     });
     if (!response.ok) {
