@@ -28,6 +28,7 @@ const gameElements = {
 function preload ()
 {
     this.load.image('background', '../images/background.png');
+    this.load.image('frame', '../images/blue_frame.png');
     this.load.image('invisible-floor', '../images/invisible_floor.png');
     this.load.image('folder', '../images/folder.png');
     this.load.spritesheet('stickman', '../images/stickman.png', { frameWidth: 152, frameHeight: 226 });
@@ -40,11 +41,6 @@ function create ()
 
     // Background
     this.add.image(0, 0, 'background').setOrigin(0,0).setScale(7/8);
-
-    let currentFolder = 'Root';
-
-    if(fileCont.currentRoute !== '/') currentFolder = fileCont.currentRoute;
-    this.add.text(10, 10, "Current location: " + currentFolder, { fontSize: '30px' });
 
     // Platforms
     gameElements.platforms = this.physics.add.staticGroup();
@@ -101,6 +97,10 @@ function create ()
         frames: [ { key: 'stickman', frame: 17 } ],
         frameRate: 20
     });
+
+    // Foreground
+    this.add.image(0, 0, 'frame').setOrigin(0,0).setScale(7/8);
+    this.add.text(10, 10, "Current location: " + fileCont.currentRoute, { fontSize: '30px' });
 
     // Controls
     gameElements.cursors = this.input.keyboard.createCursorKeys();
