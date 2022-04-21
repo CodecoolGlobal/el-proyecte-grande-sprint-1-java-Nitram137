@@ -17,6 +17,13 @@ export let fileController = {
             console.log(response);
         }).catch((error) => {
             alert(error);
-        })
+        });
+    },
+    uploadFile: function (file, path) {
+        dataHandler.uploadFile(file, path).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            alert(error);
+        });
     }
 }
