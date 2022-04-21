@@ -1,5 +1,5 @@
 import FileController from "./Controller/fileController.js";
-
+//TODO Outsource parts of the main game class
 const config = {
     type: Phaser.AUTO,
     width: 1680,
@@ -36,18 +36,24 @@ function preload ()
 
 function create ()
 {
+    const fileCont = new FileController();
+
     // Background
     this.add.image(0, 0, 'background').setOrigin(0,0).setScale(7/8);
+
+    let currentFolder = 'Root';
+
+    if(fileCont.currentRoute !== '/') currentFolder = fileCont.currentRoute;
+    this.add.text(10, 10, "Current location: " + currentFolder, { fontSize: '30px' });
 
     // Platforms
     gameElements.platforms = this.physics.add.staticGroup();
 
-    const fileCont = new FileController();
     fileCont.getFolderContent("").then((response) => {
         for (let i = 0; i < response.fileModels.length; i++) {
             let tilt = 200 + i * 250;
             gameElements.platforms.create(tilt, 800, 'folder').setScale(1.5).refreshBody();
-            this.add.text(tilt-50, 800, response.fileModels[i].name, { font: '"Press Start 2P"' });
+            this.add.text(tilt-50, 800, response.fileModels[i].name, { color: 'black' });
         }
     })
 
