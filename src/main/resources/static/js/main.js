@@ -1,3 +1,5 @@
+import FileController from "./Controller/fileController.js";
+
 const config = {
     type: Phaser.AUTO,
     width: 1680,
@@ -17,6 +19,12 @@ const config = {
 
 const game = new Phaser.Game(config);
 
+const gameElements = {
+    player: null,
+    cursors: null,
+    platforms: null,
+}
+
 function preload ()
 {
     this.load.image('background', '../images/background.png');
@@ -32,18 +40,22 @@ function create ()
     this.add.image(0, 0, 'background').setOrigin(0,0).setScale(7/8);
 
     // Platforms
-    platforms = this.physics.add.staticGroup();
+    gameElements.platforms = this.physics.add.staticGroup();
 
-    for(let i=0;i<3;i++) {
-        let tilt = 800 + i * 250;
-        platforms.create(tilt, 800, 'folder').setScale(1.5).refreshBody();
-        this.add.text(tilt-50, 800, 'Hello World', { font: '"Press Start 2P"' });
-    }
-    platforms.create(840, 925, 'invisible-floor').refreshBody();
+    const fileCont = new FileController();
+    fileCont.getFolderContent("").then((response) => {
+        for (let i = 0; i < response.fileModels.length; i++) {
+            let tilt = 200 + i * 250;
+            gameElements.platforms.create(tilt, 800, 'folder').setScale(1.5).refreshBody();
+            this.add.text(tilt-50, 800, response.fileModels[i].name, { font: '"Press Start 2P"' });
+        }
+    })
+
+    gameElements.platforms.create(840, 925, 'invisible-floor').refreshBody();
 
     //Player
-    player = this.physics.add.sprite(200, 250, 'stickman').setScale(2/3);
-    player.setCollideWorldBounds(true);
+    gameElements.player = this.physics.add.sprite(200, 250, 'stickman').setScale(2/3);
+    gameElements.player.setCollideWorldBounds(true);
 
     // Animations
     this.anims.create({
@@ -85,14 +97,16 @@ function create ()
     });
 
     // Controls
-    cursors = this.input.keyboard.createCursorKeys();
+    gameElements.cursors = this.input.keyboard.createCursorKeys();
 
     // Collisions
-    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(gameElements.player, gameElements.platforms);
 }
 
 function update ()
 {
+    let cursors = gameElements.cursors;
+    let player = gameElements.player;
     if (cursors.left.isDown)
     {
         player.setVelocityX(-200);
