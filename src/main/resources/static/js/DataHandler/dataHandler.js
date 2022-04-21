@@ -23,6 +23,9 @@ export let dataHandler = {
         payload.append('path', newPath);
         return await apiPut('/api/file/move', payload);
     },
+    deleteFile: async function(fileName, path) {
+        return await apiDelete(`/api/file?name=${fileName}&path=${path}`)
+    },
     uploadFile: async function(file, path) {
         const payload = new FormData();
         payload.append('file', file);
