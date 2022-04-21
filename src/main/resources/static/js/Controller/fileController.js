@@ -9,7 +9,9 @@ export default class FileController {
     }
 
     async getFolderContent(folderName) {
-        this.currentRoute = this.currentRoute + folderName + "/";
+        if (folderName !== "") {
+            this.currentRoute = this.currentRoute + folderName + "/";
+        }
         return await dataHandler.getFolderContent(this.currentRoute);
     }
 

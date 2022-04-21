@@ -35,7 +35,7 @@ function preload ()
 
 }
 
-function create ()
+function create()
 {
     const fileCont = new FileController();
 
@@ -109,7 +109,7 @@ function create ()
     this.physics.add.collider(gameElements.player, gameElements.platforms);
 }
 
-function update ()
+function update()
 {
     let cursors = gameElements.cursors;
     let player = gameElements.player;
