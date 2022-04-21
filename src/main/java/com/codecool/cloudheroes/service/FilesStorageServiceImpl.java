@@ -44,7 +44,7 @@ public class FilesStorageServiceImpl implements FilesStorageService{
         if (folderName.contains(".")) {
             throw new InvalidFileNameException(folderName, "FolderName is invalid!");
         }
-        boolean createFolder = new File(folder + folderName).mkdir();
+        boolean createFolder = new File(USER_DIRECTORY + path + folderName).mkdir();
         if (!createFolder) {
             throw new FileAlreadyExistsException("Folder is already exists!");
         }
