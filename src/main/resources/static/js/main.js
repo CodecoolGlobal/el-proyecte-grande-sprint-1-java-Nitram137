@@ -20,6 +20,7 @@ const game = new Phaser.Game(config);
 function preload ()
 {
     this.load.image('background', '../images/background.png');
+    this.load.image('invisible-floor', '../images/invisible_floor.png');
     this.load.image('folder', '../images/folder.png');
     this.load.spritesheet('stickman', '../images/stickman.png', { frameWidth: 152, frameHeight: 226 });
 
@@ -33,9 +34,11 @@ function create ()
 
     for(let i=0;i<6;i++) {
         let tilt = 200 + i * 250;
-        platforms.create(tilt, 800, 'folder').setScale(1.5).refreshBody();
-        if(i>1 && i<4) platforms.create(tilt, 650, 'folder').setScale(1.5).refreshBody();
+        platforms.create(tilt, 600, 'folder').setScale(1.5).refreshBody();
+        if(i>1 && i<4) platforms.create(tilt, 450, 'folder').setScale(1.5).refreshBody();
     }
+
+    platforms.create(840, 925, 'invisible-floor').refreshBody();
 
     player = this.physics.add.sprite(500, 350, 'stickman').setScale(2/3);
 
@@ -44,7 +47,7 @@ function create ()
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('stickman', { start: 0, end: 6 }),
-        frameRate: 10,
+        frameRate: 15,
         repeat: -1
     });
 
@@ -57,7 +60,7 @@ function create ()
     this.anims.create({
         key: 'right',
         frames: this.anims.generateFrameNumbers('stickman', { start: 8, end: 14 }),
-        frameRate: 10,
+        frameRate: 15,
         repeat: -1
     });
 
