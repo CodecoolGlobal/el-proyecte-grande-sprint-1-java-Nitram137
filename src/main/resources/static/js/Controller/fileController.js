@@ -7,10 +7,23 @@ export let fileController = {
     },
     getFolderContent: function (folderName) {
         dataHandler.getFolderContent(fileController.currentRoute + folderName + "/").then((response) => {
+            fileController.currentRoute = fileController.currentRoute + folderName + "/";
             console.log(response);
         }).catch((error) => {
             alert(error);
         });
+    },
+    moveBack: function () {
+        const routes = fileController.currentRoute.substring(1, fileController.currentRoute.length - 1).split("/");
+        routes.pop();
+        if (routes.length === 0) {
+            fileController.currentRoute = "/";
+        } else {
+            fileController.currentRoute = "/" + routes.join("/") + "/";
+        }
+        dataHandler.getFolderContent(fileController.currentRoute).then((response) => {
+            console.log(response);
+        })
     },
     createFolder: function (folderName) {
         dataHandler.createFolder(folderName, fileController.currentRoute).then((response) => {
