@@ -31,7 +31,14 @@ export let fileController = {
             console.log(response);
         }).catch((error) => {
             alert(error);
-        })
+        });
+    },
+    deleteFile: function(fileName, path) {
+        dataHandler.deleteFile(fileName, path).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            alert(error);
+        });
     },
     uploadFile: function (file) {
         dataHandler.uploadFile(file, fileController.currentRoute).then((response) => {
