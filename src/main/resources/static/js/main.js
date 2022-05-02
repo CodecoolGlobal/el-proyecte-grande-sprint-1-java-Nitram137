@@ -19,6 +19,8 @@ const config = {
 
 const game = new Phaser.Game(config);
 
+const fileCont = new FileController();
+
 const gameElements = {
     player: null,
     cursors: null,
@@ -37,8 +39,6 @@ function preload ()
 
 function create()
 {
-    const fileCont = new FileController();
-
     // Background
     this.add.image(0, 0, 'background').setOrigin(0,0).setScale(7/8);
 
