@@ -26,12 +26,14 @@ export default class GameScene extends Phaser.Scene
         this.add.image(0, 0, 'background').setOrigin(0,0).setScale(7/8);
 
         const platforms = this.createPlatforms();
+        const folders = this.createFolders();
         this.player = this.createPlayer();
 
         this.add.image(0, 0, 'frame').setOrigin(0,0).setScale(7/8);
         this.add.text(10, 10, "Current location: ", { fontSize: '30px' });
 
         this.physics.add.collider(this.player, platforms);
+        this.physics.add.collider(this.player, folders);
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -42,6 +44,17 @@ export default class GameScene extends Phaser.Scene
         platforms.create(840, 925, 'invisible-floor').refreshBody();
 
         return platforms;
+    }
+
+    createFolders() {
+        const folders = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        });
+
+        folders.create(500, 800, FOLDER).setScale(1.5).refreshBody();
+
+        return folders;
     }
 
     createPlayer() {
