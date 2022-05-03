@@ -23,13 +23,13 @@ export default class GameScene extends Phaser.Scene
 
     create()
     {
-        this.add.text(10, 10, "Current location: ", { fontSize: '30px' });
         this.add.image(0, 0, 'background').setOrigin(0,0).setScale(7/8);
 
         const platforms = this.createPlatforms();
         this.player = this.createPlayer();
 
         this.add.image(0, 0, 'frame').setOrigin(0,0).setScale(7/8);
+        this.add.text(10, 10, "Current location: ", { fontSize: '30px' });
 
         this.physics.add.collider(this.player, platforms);
 
