@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import FileController from "./Controller/fileController";
 
 const PLAYER_KEY = "stickman";
 const FLOOR = "invisible-floor";
@@ -46,13 +47,23 @@ export default class GameScene extends Phaser.Scene
         return platforms;
     }
 
-    createFolders() {
+    createFolders(folderName = "") {
         const folders = this.physics.add.group({
             immovable: true,
             allowGravity: false
         });
 
-        folders.create(500, 800, FOLDER).setScale(1.5).refreshBody();
+        const fileController = new FileController();
+        fileController.getFolderContent(folderName).then((result) => {
+            const X_START = 200;
+            const distance = 250;
+            const y = 800;
+            for (let i = 0; i < result.fileModels. length; i++) {
+                let x = X_START + i * distance;
+                const folder = folders.create(x, y, FOLDER).setName(result.fileModels[i].name).setScale(1.5).refreshBody();
+                this.add.text(x, y, folder.name, {color: "black"}).setOrigin();
+            }
+        });
 
         return folders;
     }
