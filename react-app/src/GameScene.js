@@ -29,18 +29,22 @@ export default class GameScene extends Phaser.Scene {
 
         const platforms = this.createPlatforms();
         const FolderObject = this.createFolders();
-        const folders = FolderObject.folders;
-        const folderTitles = FolderObject.titles;
+        let folders = FolderObject.folders;
+        let folderTitles = FolderObject.titles;
 
         this.player = this.createPlayer(startingCoords[0], startingCoords[1]);
 
         this.add.image(0, 0, 'frame').setOrigin(0, 0).setScale(7 / 8);
-        const locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
+        let locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
 
         this.physics.add.collider(this.player, platforms);
-        this.physics.add.collider(this.player, folders, (player, folder) => {
+        let folderCollision = this.physics.add.collider(this.player, folders, (player, folder) => {
             if (this.cursors.down.isDown) {
-                this.refresh(folders, folderTitles, locationText, folder);
+                const RefreshedContent = this.refresh(folders, folderTitles, locationText, folder, folderCollision);
+                folders = RefreshedContent.folders;
+                folderTitles = RefreshedContent.titles;
+                locationText = RefreshedContent.location;
+                folderCollision = RefreshedContent.collision;
             }
         });
 
@@ -127,11 +131,11 @@ export default class GameScene extends Phaser.Scene {
     update() {
 
         if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-200);
+            this.player.setVelocityX(-300);
             if (!this.player.body.touching.down) this.player.anims.play('jump_left');
             else this.player.anims.play('left', true);
         } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(200);
+            this.player.setVelocityX(300);
             if (!this.player.body.touching.down) this.player.anims.play('jump_right');
             else this.player.anims.play('right', true);
         } else {
@@ -143,13 +147,25 @@ export default class GameScene extends Phaser.Scene {
         if (!this.player.body.touching.down && !this.cursors.right.isDown && !this.cursors.left.isDown) this.player.anims.play('jump');
     }
 
-    refresh(folders, folderTitles, locationText, folder) {
+    refresh(folders, folderTitles, locationText, folder, folderCollision) {
         folders.destroy(true);
         folderTitles.forEach((folderTitle) => {folderTitle.destroy()});
         locationText.destroy();
-        this.createFolders(folder.name);
+        folderCollision.destroy();
+        const FolderObject = this.createFolders(folder.name);
+        folders = FolderObject.folders;
+        folderTitles = FolderObject.titles;
+        folderCollision = this.physics.add.collider(this.player, folders, (player, folder) => {
+            if (this.cursors.down.isDown) {
+                const RefreshedContent = this.refresh(folders, folderTitles, locationText, folder, folderCollision);
+                folders = RefreshedContent.folders;
+                folderTitles = RefreshedContent.titles;
+                locationText = RefreshedContent.location;
+            }
+        });
         this.player.setPosition(startingCoords[0], startingCoords[1]);
-        this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
+        locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
+        return {"folders": folders, "titles": folderTitles, "location": locationText, "collision": folderCollision};
     }
 }
 
