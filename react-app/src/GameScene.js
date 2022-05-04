@@ -19,6 +19,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('frame', 'game_assets/blue_frame.png');
         this.load.image(FLOOR, 'game_assets/invisible_floor.png');
         this.load.image(FOLDER, 'game_assets/folder.png');
+        this.load.image('exit', 'game_assets/exit_sign.png')
         this.load.spritesheet(PLAYER_KEY, 'game_assets/stickman.png',
             {frameWidth: 152, frameHeight: 226});
 
@@ -26,6 +27,8 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
         this.add.image(0, 0, 'background').setOrigin(0, 0).setScale(7 / 8);
+        this.add.image(1400, 600, 'exit').setOrigin().setScale(0.2);
+
 
         const platforms = this.createPlatforms();
         const FolderObject = this.createFolders();
