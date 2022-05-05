@@ -54,6 +54,7 @@ export default class GameScene extends Phaser.Scene {
         });
 
         let exitCollision = this.physics.add.collider(this.player, exit, () => {
+            if(this.fileController.currentRoute === "/") window.close();
             this.fileController.moveBack();
             const RefreshedContent = this.refresh(folders, folderTitles, locationText, "", folderCollision, exitCollision, exit);
             folders = RefreshedContent.folders;
@@ -182,6 +183,7 @@ export default class GameScene extends Phaser.Scene {
             }
         });
         exitCollision = this.physics.add.collider(this.player, exit, () => {
+            if(this.fileController.currentRoute === "/") window.close();
             this.fileController.moveBack();
             const RefreshedContent = this.refresh(folders, folderTitles, locationText, "", folderCollision, exitCollision, exit);
             folders = RefreshedContent.folders;
