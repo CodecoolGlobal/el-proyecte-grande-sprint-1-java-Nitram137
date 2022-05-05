@@ -14,6 +14,15 @@ export default class GameScene extends Phaser.Scene {
 
     fileController = new FileController();
 
+    globals = {
+        folders: null,
+        folderTitles: null,
+        location: null,
+        folderCollision: null,
+        exitCollision: null,
+        exit: null
+    }
+
     preload() {
         this.load.image('background', "game_assets/background.png");
         this.load.image('frame', 'game_assets/blue_frame.png');
@@ -30,39 +39,19 @@ export default class GameScene extends Phaser.Scene {
 
         const platforms = this.createPlatforms();
         const FolderObject = this.createFolders();
-        let folders = FolderObject.folders;
-        let folderTitles = FolderObject.titles;
+        this.globals.folders = FolderObject.folders;
+        this.globals.folderTitles = FolderObject.titles;
 
         this.player = this.createPlayer(startingCoords[0], startingCoords[1]);
 
-        const exit = this.physics.add.staticImage(1400, 600, 'exit').setOrigin().setScale(0.2).refreshBody();
+        this.globals.exit = this.physics.add.staticImage(1400, 600, 'exit').setOrigin().setScale(0.2).refreshBody();
 
         this.add.image(0, 0, 'frame').setOrigin(0, 0).setScale(7 / 8);
-        let locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
+        this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
 
         this.physics.add.collider(this.player, platforms);
 
-        let folderCollision = this.physics.add.collider(this.player, folders, (player, folder) => {
-            if (this.cursors.down.isDown) {
-                const RefreshedContent = this.refresh(folders, folderTitles, locationText, folder.name, folderCollision, exitCollision, exit);
-                folders = RefreshedContent.folders;
-                folderTitles = RefreshedContent.titles;
-                locationText = RefreshedContent.location;
-                folderCollision = RefreshedContent.collision;
-                exitCollision = RefreshedContent.exit;
-            }
-        });
-
-        let exitCollision = this.physics.add.collider(this.player, exit, () => {
-            if(this.fileController.currentRoute === "/") window.close();
-            this.fileController.moveBack();
-            const RefreshedContent = this.refresh(folders, folderTitles, locationText, "", folderCollision, exitCollision, exit);
-            folders = RefreshedContent.folders;
-            folderTitles = RefreshedContent.titles;
-            locationText = RefreshedContent.location;
-            folderCollision = RefreshedContent.collision;
-            exitCollision = RefreshedContent.exit;
-        });
+        this.recreateColliders();
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -95,6 +84,19 @@ export default class GameScene extends Phaser.Scene {
         });
 
         return {"folders": folders, "titles": folderTitles};
+    }
+
+    recreateColliders() {
+        this.globals.folderCollision = this.physics.add.collider(this.player, this.globals.folders, (player, folder) => {
+            if (this.cursors.down.isDown) {
+                this.refresh(folder.name);
+            }
+        });
+        this.globals.exitCollision = this.physics.add.collider(this.player, this.globals.exit, () => {
+            if(this.fileController.currentRoute === "/") window.close();
+            this.fileController.moveBack();
+            this.refresh("");
+        });
     }
 
     createPlayer(x, y) {
@@ -163,38 +165,18 @@ export default class GameScene extends Phaser.Scene {
         if (!this.player.body.touching.down && !this.cursors.right.isDown && !this.cursors.left.isDown) this.player.anims.play('jump');
     }
 
-    refresh(folders, folderTitles, locationText, folderName, folderCollision, exitCollision, exit) {
-        folders.destroy(true);
-        folderTitles.forEach((folderTitle) => {folderTitle.destroy()});
-        locationText.destroy();
-        folderCollision.destroy();
-        exitCollision.destroy();
-        const FolderObject = this.createFolders(folderName);
-        folders = FolderObject.folders;
-        folderTitles = FolderObject.titles;
-        folderCollision = this.physics.add.collider(this.player, folders, (player, folder) => {
-            if (this.cursors.down.isDown) {
-                const RefreshedContent = this.refresh(folders, folderTitles, locationText, folder.name, folderCollision, exitCollision, exit);
-                folders = RefreshedContent.folders;
-                folderTitles = RefreshedContent.titles;
-                locationText = RefreshedContent.location;
-                exitCollision = RefreshedContent.exit;
+    refresh(folderName) {
+        this.globals.folders.destroy(true);
+        this.globals.folderTitles.forEach((folderTitle) => {folderTitle.destroy()});
+        this.globals.locationText.destroy();
+        this.globals.folderCollision.destroy();
+        this.globals.exitCollision.destroy();
 
-            }
-        });
-        exitCollision = this.physics.add.collider(this.player, exit, () => {
-            if(this.fileController.currentRoute === "/") window.close();
-            this.fileController.moveBack();
-            const RefreshedContent = this.refresh(folders, folderTitles, locationText, "", folderCollision, exitCollision, exit);
-            folders = RefreshedContent.folders;
-            folderTitles = RefreshedContent.titles;
-            locationText = RefreshedContent.location;
-            folderCollision = RefreshedContent.collision;
-            exitCollision = RefreshedContent.exit;
-        });
+        const FolderObject = this.createFolders(folderName);
+        this.globals.folders = FolderObject.folders;
+        this.globals.folderTitles = FolderObject.titles;
+        this.recreateColliders();
         this.player.setPosition(startingCoords[0], startingCoords[1]);
-        locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
-        return {"folders": folders, "titles": folderTitles, "location": locationText, "collision": folderCollision, "exit": exit};
+        this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
     }
 }
-
