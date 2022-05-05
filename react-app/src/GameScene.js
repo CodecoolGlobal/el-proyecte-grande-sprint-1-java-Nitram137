@@ -20,7 +20,8 @@ export default class GameScene extends Phaser.Scene {
         location: null,
         folderCollision: null,
         exitCollision: null,
-        exit: null
+        exit: null,
+        newFolderCount: 0
     }
 
     preload() {
@@ -164,8 +165,11 @@ export default class GameScene extends Phaser.Scene {
 
         if (this.cursors.up.isDown && this.player.body.touching.down) this.player.setVelocityY(-540);
         if (!this.player.body.touching.down && !this.cursors.right.isDown && !this.cursors.left.isDown) this.player.anims.play('jump');
-        if (this.cursors.space.isDown) {
-            this.fileController.createFolder("new folder");
+        if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE))) {
+            ++this.globals.newFolderCount;
+            this.fileController.createFolder("new folder" + this.globals.newFolderCount);
+            // New folder won't appear on single refresh
+            this.refresh("");
             this.refresh("");
         }
     }
