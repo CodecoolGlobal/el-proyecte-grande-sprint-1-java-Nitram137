@@ -36,6 +36,7 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
         this.add.image(0, 0, 'background').setOrigin(0, 0).setScale(7 / 8);
+        this.add.image(1400, 720, 'exit').setOrigin().setScale(0.2);
 
         const platforms = this.createPlatforms();
         const FolderObject = this.createFolders();
@@ -44,7 +45,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.player = this.createPlayer(startingCoords[0], startingCoords[1]);
 
-        this.globals.exit = this.physics.add.staticImage(1400, 600, 'exit').setOrigin().setScale(0.2).refreshBody();
+        this.globals.exit = this.physics.add.staticImage(1650, 800, 'exit').setOrigin().setScale(0.05).refreshBody();
 
         this.add.image(0, 0, 'frame').setOrigin(0, 0).setScale(7 / 8);
         this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
