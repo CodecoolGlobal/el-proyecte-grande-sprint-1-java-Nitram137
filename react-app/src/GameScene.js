@@ -164,6 +164,10 @@ export default class GameScene extends Phaser.Scene {
 
         if (this.cursors.up.isDown && this.player.body.touching.down) this.player.setVelocityY(-540);
         if (!this.player.body.touching.down && !this.cursors.right.isDown && !this.cursors.left.isDown) this.player.anims.play('jump');
+        if (this.cursors.space.isDown) {
+            this.fileController.createFolder("new folder");
+            this.refresh("");
+        }
     }
 
     refresh(folderName) {

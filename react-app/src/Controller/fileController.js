@@ -30,7 +30,7 @@ export default class FileController {
         dataHandler.createFolder(folderName, this.currentRoute).then((response) => {
             console.log(response);
         }).catch((error) => {
-            alert(error);
+            console.log(error);
         });
     }
 
