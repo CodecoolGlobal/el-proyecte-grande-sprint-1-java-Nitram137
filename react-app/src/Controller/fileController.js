@@ -23,9 +23,7 @@ export default class FileController {
         } else {
             this.currentRoute = "/" + routes.join("/") + "/";
         }
-        dataHandler.getFolderContent(this.currentRoute).then((response) => {
-            console.log(response);
-        })
+
     }
 
     createFolder(folderName) {
