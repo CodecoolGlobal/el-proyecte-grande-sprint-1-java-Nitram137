@@ -54,7 +54,7 @@ export default class FileController {
         dataHandler.deleteFile(fileName, path).then((response) => {
             console.log(response);
         }).catch((error) => {
-            alert(error);
+            console.log(error.message);
         });
     }
 

@@ -80,7 +80,7 @@ export default class GameScene extends Phaser.Scene {
             const y = 800;
             for (let i = 0; i < result.fileModels.length; i++) {
                 let x = X_START + i * distance;
-                const folder = folders.create(x, y, FOLDER).setName(result.fileModels[i].name).setScale(1.5).refreshBody();
+                const folder = folders.create(x, y, FOLDER).setName(result.fileModels[i].name).setScale(1.5);
                 folderTitles.push(this.add.text(x, y, folder.name, {color: "black"}).setOrigin());
             }
         });
@@ -92,6 +92,11 @@ export default class GameScene extends Phaser.Scene {
         this.globals.folderCollision = this.physics.add.collider(this.player, this.globals.folders, (player, folder) => {
             if (this.cursors.down.isDown) {
                 this.refresh(folder.name);
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X))) {
+                this.fileController.deleteFile(folder.name, this.fileController.currentRoute);
+                this.refresh("");
+                this.refresh("");
             }
         });
         this.globals.exitCollision = this.physics.add.collider(this.player, this.globals.exit, () => {
