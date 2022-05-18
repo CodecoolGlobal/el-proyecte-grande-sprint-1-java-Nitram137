@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.*;
@@ -108,5 +110,11 @@ public class FileController {
         Resource file = storageService.load(fileName, path);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    @GetMapping("/set-path/{path}")
+    public void setPathWithCookie(HttpServletResponse response, @PathVariable String path) {
+        Cookie cookie = new Cookie("path", path);
+        response.addCookie(cookie);
     }
 }
