@@ -114,9 +114,11 @@ export default class GameScene extends Phaser.Scene {
                 this.refresh(folder.name);
             }
             if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X))) {
-                this.fileController.deleteFile(folder.name, this.fileController.currentRoute);
-                this.refresh("", false);
-                this.refresh("", false);
+                if (window.confirm("Are you sure about deleting this folder?")) {
+                    this.fileController.deleteFile(folder.name, this.fileController.currentRoute);
+                    this.refresh("", false);
+                    this.refresh("", false);
+                }
             }
         });
         this.globals.exitCollision = this.physics.add.collider(this.player, this.globals.exit, () => {
