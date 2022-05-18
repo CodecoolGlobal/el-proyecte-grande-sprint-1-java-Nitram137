@@ -169,12 +169,12 @@ export default class GameScene extends Phaser.Scene {
             ++this.globals.newFolderCount;
             this.fileController.createFolder("new folder" + this.globals.newFolderCount);
             // New folder won't appear on single refresh
-            this.refresh("");
-            this.refresh("");
+            this.refresh("", false);
+            this.refresh("", false);
         }
     }
 
-    refresh(folderName) {
+    refresh(folderName, resetPlayer = true) {
         this.globals.folders.destroy(true);
         this.globals.folderTitles.forEach((folderTitle) => {folderTitle.destroy()});
         this.globals.locationText.destroy();
@@ -185,7 +185,7 @@ export default class GameScene extends Phaser.Scene {
         this.globals.folders = FolderObject.folders;
         this.globals.folderTitles = FolderObject.titles;
         this.recreateColliders();
-        this.player.setPosition(startingCoords[0], startingCoords[1]);
+        if(resetPlayer) this.player.setPosition(startingCoords[0], startingCoords[1]);
         this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
     }
 }
