@@ -96,7 +96,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.fileController.getFolderContent(folderName).then((result) => {
             const X_START = 200;
-            const distance = 250;
+            const distance = 255;
             const y = 800;
             for (let i = 0; i < result.fileModels.length; i++) {
                 let x = X_START + i * distance;

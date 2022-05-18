@@ -1,6 +1,7 @@
 import { Modal } from 'react-bootstrap';
 import React, {useCallback, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './ModalLayout.css';
 
 function ModalLayout(props) {
 

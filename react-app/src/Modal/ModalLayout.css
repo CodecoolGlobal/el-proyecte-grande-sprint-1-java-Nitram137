@@ -1,0 +1,20 @@
+.modal-content {
+    background-color: #00a2fe;
+    border: 5px solid #3a3a3a;
+    border-radius: 2em;
+}
+
+.modal-footer {
+    border-top: none;
+    padding-top: 0;
+}
+
+label {
+    color: #3a3a3a;
+    font-weight: bold;
+    padding-bottom: 0.5em;
+}
+
+p {
+    color: #595959;
+}
