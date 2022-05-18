@@ -82,9 +82,21 @@ public class FilesStorageServiceImpl implements FilesStorageService{
     @Override
     public void deleteFile(String name, String path) throws FileNotFoundException {
         File file = new File(USER_DIRECTORY + path + name);
-        if (!file.delete()) {
+        if (!delete(file)) {
             throw new FileNotFoundException("File not found");
         }
+    }
+
+    private boolean delete(File directory) {
+        if(directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if(files != null) {
+                for(File file : files) {
+                    delete(file);
+                }
+            }
+        }
+        return directory.delete();
     }
 
 
