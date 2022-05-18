@@ -8,8 +8,9 @@ const startingCoords = [200, 250];
 
 export default class GameScene extends Phaser.Scene {
 
-    constructor() {
+    constructor(callbacks) {
         super('game-scene');
+        this.callbacks = callbacks;
     }
 
     fileController = new FileController();
@@ -36,6 +37,25 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
+
+        const modalBoxClosed = () => {
+            let input = document.getElementById('input');
+            input.value = "";
+        }
+
+        const handleSubmitModal = () => {
+            let input = document.getElementById('input');
+            if (input.value !== "") {
+                this.fileController.createFolder(input.value);
+            }
+            this.refresh("", false);
+            this.refresh("", false);
+            input.value = "";
+        }
+
+        window.addEventListener('close-modal', modalBoxClosed);
+        window.addEventListener('submit-modal', handleSubmitModal);
+
         this.add.image(0, 0, 'background').setOrigin(0, 0).setScale(7 / 8);
         this.add.image(1400, 720, 'exit').setOrigin().setScale(0.2);
 
@@ -166,15 +186,11 @@ export default class GameScene extends Phaser.Scene {
         if (this.cursors.up.isDown && this.player.body.touching.down) this.player.setVelocityY(-540);
         if (!this.player.body.touching.down && !this.cursors.right.isDown && !this.cursors.left.isDown) this.player.anims.play('jump');
         if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE))) {
-            ++this.globals.newFolderCount;
-            this.fileController.createFolder("new folder" + this.globals.newFolderCount);
-            // New folder won't appear on single refresh
-            this.refresh("");
-            this.refresh("");
+            this.callbacks.toggleModal();
         }
     }
 
-    refresh(folderName) {
+    refresh(folderName, resetPlayer = true) {
         this.globals.folders.destroy(true);
         this.globals.folderTitles.forEach((folderTitle) => {folderTitle.destroy()});
         this.globals.locationText.destroy();
@@ -185,7 +201,7 @@ export default class GameScene extends Phaser.Scene {
         this.globals.folders = FolderObject.folders;
         this.globals.folderTitles = FolderObject.titles;
         this.recreateColliders();
-        this.player.setPosition(startingCoords[0], startingCoords[1]);
+        if(resetPlayer) this.player.setPosition(startingCoords[0], startingCoords[1]);
         this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
     }
 }
