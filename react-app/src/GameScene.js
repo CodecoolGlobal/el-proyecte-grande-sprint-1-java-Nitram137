@@ -60,9 +60,7 @@ export default class GameScene extends Phaser.Scene {
         this.add.image(1400, 720, 'exit').setOrigin().setScale(0.2);
 
         const platforms = this.createPlatforms();
-        const FolderObject = this.createFolders();
-        this.globals.folders = FolderObject.folders;
-        this.globals.folderTitles = FolderObject.titles;
+        this.createFolders();
 
         this.player = this.createPlayer(startingCoords[0], startingCoords[1]);
 
@@ -104,8 +102,8 @@ export default class GameScene extends Phaser.Scene {
                 folderTitles.push(this.add.text(x, y, folder.name, {color: "black"}).setOrigin());
             }
         });
-
-        return {"folders": folders, "titles": folderTitles};
+        this.globals.folders = folders;
+        this.globals.folderTitles = folderTitles;
     }
 
     recreateColliders() {
@@ -204,9 +202,7 @@ export default class GameScene extends Phaser.Scene {
         this.globals.folderCollision.destroy();
         this.globals.exitCollision.destroy();
 
-        const FolderObject = this.createFolders(folderName);
-        this.globals.folders = FolderObject.folders;
-        this.globals.folderTitles = FolderObject.titles;
+        this.createFolders(folderName);
         this.recreateColliders();
         if(resetPlayer) this.player.setPosition(startingCoords[0], startingCoords[1]);
         this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
