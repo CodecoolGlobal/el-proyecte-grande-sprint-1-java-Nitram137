@@ -1,4 +1,5 @@
 import {dataHandler} from "../DataHandler/dataHandler.js";
+import data from "bootstrap/js/src/dom/data";
 
 export default class FileController {
 
@@ -64,5 +65,9 @@ export default class FileController {
         }).catch((error) => {
             alert(error);
         });
+    }
+
+    async downloadFile(fileName) {
+        return await fetch(`/api/file/download?path=${this.currentRoute}&fileName=${fileName}`)
     }
 }
