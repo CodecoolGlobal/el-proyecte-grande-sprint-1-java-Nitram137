@@ -4,6 +4,7 @@ import FileController from "./Controller/fileController";
 const PLAYER_KEY = "stickman";
 const FLOOR = "invisible-floor";
 const FOLDER = "folder";
+const FILE = "file";
 const startingCoords = [200, 250];
 
 export default class GameScene extends Phaser.Scene {
@@ -30,7 +31,8 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('frame', 'game_assets/blue_frame.png');
         this.load.image(FLOOR, 'game_assets/invisible_floor.png');
         this.load.image(FOLDER, 'game_assets/folder.png');
-        this.load.image('exit', 'game_assets/exit_sign.png')
+        this.load.image(FILE, 'game_assets/file.png');
+        this.load.image('exit', 'game_assets/exit_sign.png');
         this.load.spritesheet(PLAYER_KEY, 'game_assets/stickman.png',
             {frameWidth: 152, frameHeight: 226});
 
@@ -99,8 +101,13 @@ export default class GameScene extends Phaser.Scene {
             const distance = 255;
             const y = 800;
             for (let i = 0; i < result.fileModels.length; i++) {
+                let folder;
                 let x = X_START + i * distance;
-                const folder = folders.create(x, y, FOLDER).setName(result.fileModels[i].name).setScale(1.5);
+                if (result.fileModels[i].directory === true) {
+                    folder = folders.create(x, y, FOLDER).setName(result.fileModels[i].name).setScale(1.5);
+                } else {
+                    folder = folders.create(x, y, FILE).setName(result.fileModels[i].name).setScale(1.5);
+                }
                 folderTitles.push(this.add.text(x, y, folder.name, {color: "black"}).setOrigin());
             }
         });
@@ -195,6 +202,25 @@ export default class GameScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE))) {
             this.callbacks.toggleModal();
         }
+        if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U))) {
+            this.uploadFile();
+        }
+    }
+
+    uploadFile() {
+        let fileTab = document.createElement("input");
+        fileTab.setAttribute("type", "file");
+        fileTab.addEventListener("change", () => {
+            const selectedFile = fileTab.files[0];
+            if (selectedFile.size <= 10485760) {
+                this.fileController.uploadFile(selectedFile);
+            } else {
+                alert("File is too large to upload. Maximum file size is 10MB");
+            }
+            this.refresh("", false);
+            this.refresh("", false);
+        });
+        fileTab.click();
     }
 
     refresh(folderName, resetPlayer = true) {
