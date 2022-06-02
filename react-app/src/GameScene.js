@@ -118,7 +118,29 @@ export default class GameScene extends Phaser.Scene {
     recreateColliders() {
         this.globals.folderCollision = this.physics.add.collider(this.player, this.globals.folders, (player, folder) => {
             if (this.cursors.down.isDown) {
-                this.refresh(folder.name);
+                if (folder.name.includes(".")) {
+                    this.fileController.downloadFile(folder.name).then((response) => {
+                        return response.blob();
+                    }).then((data) => {
+                        let a = document.createElement("a");
+                        a.href = window.URL.createObjectURL(data);
+                        if (folder.name.split('.').pop() === "jpg" || folder.name.split('.').pop() === "png") {
+                            let image = new Image();
+                            image.setAttribute('src', a.toString());
+                            image.setAttribute("height", "500px");
+                            let w = window.open("", '_blank');
+                            w.document.write(image.outerHTML);
+                            w.document.close();
+                        } else {
+                            a.download = folder.name;
+                            a.click();
+                        }
+                    });
+                    this.refresh("", true);
+                    this.refresh("", true);
+                } else {
+                    this.refresh(folder.name);
+                }
             }
             if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X))) {
                 if (window.confirm("Are you sure about deleting this folder?")) {
