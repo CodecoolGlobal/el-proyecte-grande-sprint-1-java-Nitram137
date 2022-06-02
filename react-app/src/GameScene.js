@@ -16,6 +16,8 @@ export default class GameScene extends Phaser.Scene {
 
     fileController = new FileController();
 
+    locationTextStyle = {fontSize: '30px', fontStyle: "bold", color: "#ffd800"}
+
     globals = {
         folders: null,
         folderTitles: null,
@@ -69,7 +71,7 @@ export default class GameScene extends Phaser.Scene {
         this.globals.exit = this.physics.add.staticImage(1650, 800, 'exit').setOrigin().setScale(0.05).refreshBody();
 
         this.add.image(0, 0, 'frame').setOrigin(0, 0).setScale(7 / 8);
-        this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
+        this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, this.locationTextStyle);
 
         this.physics.add.collider(this.player, platforms);
 
@@ -231,6 +233,6 @@ export default class GameScene extends Phaser.Scene {
         this.createFolders(folderName);
         this.recreateColliders();
         if(resetPlayer) this.player.setPosition(startingCoords[0], startingCoords[1]);
-        this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, {fontSize: '30px'});
+        this.globals.locationText = this.add.text(10, 10, "Current location: " + this.fileController.currentRoute, this.locationTextStyle);
     }
 }
